@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Jumbotron, Button, Row } from "react-bootstrap";
 import { Route, Router } from "react-router";
-import HomePage from "../Components/Pages/Home";
+import { HomePage } from "../Components/Pages/Home";
 import IncomeTaxPage from "../Components/Pages/Income_Tax";
 import Switch from "react-bootstrap/esm/Switch";
 
