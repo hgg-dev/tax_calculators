@@ -1,0 +1,4 @@
+// tell babel which presets to use for transpiling the code.
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"]
+}
