@@ -1,8 +1,27 @@
 import React from "react";
 import { Button, TextField, MenuItem } from "@material-ui/core";
 import NumberFormat from "react-number-format";
+import { years, payFrequency } from "../../Utilise/helpers";
+import { makeStyles } from "@material-ui/core/styles";
 
-const IncomeCalculator = (income: number): number => {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& .MuiTextField-root": {
+      margin: theme.spacing(1),
+      width: "25ch",
+    },
+  },
+}));
+
+const IncomeCalculator = (incomeAmount: number, payFreq: string): number => {
+  let income = incomeAmount;
+
+  if ((payFreq = "Weekly")) {
+    income * 52;
+  } else if ((payFreq = "Fortnightly")) {
+    income * 26;
+  }
+
   if (income <= 18200) {
     return 0;
   } else if (income <= 37000) {
@@ -10,86 +29,47 @@ const IncomeCalculator = (income: number): number => {
   } else if (income <= 90000) {
     return (income - 37000) * 0.325 + 3572;
   } else if (income <= 180000) {
-    return (income - 90000) * 37 + 20797;
+    return (income - 90000) * 0.37 + 20797;
   } else {
     return (income - 180000) * 0.45 + 54097;
   }
 };
 
-const years = [
-  {
-    value: "2021",
-    label: "2021",
-  },
-  {
-    value: "2020",
-    label: "2020",
-  },
-  {
-    value: "2019",
-    label: "2019",
-  },
-  {
-    value: "2018",
-    label: "2018",
-  },
-];
-
-const payFrequency = [
-  {
-    value: "Weekly",
-    label: "Weekly",
-  },
-  {
-    value: "Fortnightly",
-    label: "Fortnightly",
-  },
-  {
-    value: "Annually",
-    label: "Annually",
-  },
-];
-
 export default function IncomeCal() {
+  const classes = useStyles();
   const [year, setYear] = React.useState("2021");
   const [income, setIncome] = React.useState(0);
   const [tax, setTax] = React.useState(0);
   const [payFreq, setPayFreq] = React.useState("Annually");
 
-  const yearhandleChange = (event: any) => {
-    setYear(event.target.value);
+  const cal = () => {
+    setTax(IncomeCalculator(income, payFreq));
   };
-  const incomehandleChange = (event: any) => {
-    // setIncome(event.target.value);
-
-    let tax = IncomeCalculator(event.target.value);
-
-    setTax(tax);
-  };
-
-  const payFreqhandleChange = (event: any) => {
-    setPayFreq(event.target.value);
-  };
-
-  //   useEffect(() => {
-
-  //   });
 
   return (
     <>
-      <form noValidate autoComplete="off">
+      <form className={classes.root} noValidate autoComplete="off">
         <TextField
           id="income"
-          label="Income"
+          className={"form-fields"}
+          label={"Income " + payFreq}
           variant="outlined"
-          onChange={incomehandleChange}
+          defaultValue={75000}
+          onChange={(event) => {
+            setIncome(event.target.value);
+            cal();
+          }}
         />
         <TextField
           id="payFrequency"
+          className={"form-fields"}
           select
           label="Select"
           value={payFreq}
-          onChange={payFreqhandleChange}
+          onChange={(event) => {
+            setPayFreq(event.target.value);
+            cal();
+          }}
           helperText="Please select pay frequency"
           variant="filled"
         >
@@ -104,7 +84,10 @@ export default function IncomeCal() {
           select
           label="Select"
           value={year}
-          onChange={yearhandleChange}
+          onChange={(event) => {
+            setYear(event.target.value);
+            cal();
+          }}
           helperText="Please select your currency"
           variant="filled"
         >
