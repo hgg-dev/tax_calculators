@@ -3,6 +3,7 @@ import { Button, TextField, MenuItem } from "@material-ui/core";
 import NumberFormat from "react-number-format";
 import { years, payFrequency } from "../../Utilise/helpers";
 import { makeStyles } from "@material-ui/core/styles";
+import { Console } from "console";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,15 +14,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IncomeCalculator = (
-  incomeAmount: number | string,
-  payFreq: string
-): number => {
-  let income: number | string = incomeAmount;
+const IncomeCalculator = (incomeAmount: number, payFreq: string): number => {
+  let income = incomeAmount;
 
-  if ((payFreq = "Weekly")) {
+  if (payFreq == "Weekly") {
     income * 52;
-  } else if ((payFreq = "Fortnightly")) {
+  } else if (payFreq == "Fortnightly") {
     income * 26;
   }
 
@@ -45,8 +43,8 @@ export default function IncomeCal() {
   const [tax, setTax] = React.useState(0);
   const [payFreq, setPayFreq] = React.useState("Annually");
 
-  const cal = (inc: string | number, pay: string) => {
-    setTax(IncomeCalculator(income, payFreq));
+  const cal = (inc: number, freq: string) => {
+    setTax(IncomeCalculator(inc, freq));
   };
 
   return (
@@ -59,13 +57,11 @@ export default function IncomeCal() {
           variant="outlined"
           defaultValue={75000}
           onChange={(event) => {
-            // 1. trigger on key in
-            setTax(IncomeCalculator(event.target.value, payFreq));
-
-            // 2. trigger on after key
-            let val = event.target.value;
-            cal(val, payFreq);
-            //setIncome(event.target.value);
+            setIncome(parseInt(event.target.value));
+            // trigger on next input key
+            cal(income, payFreq);
+            // trigger on key in
+            cal(parseInt(event.target.value), payFreq);
           }}
         />
         <TextField
@@ -76,7 +72,7 @@ export default function IncomeCal() {
           value={payFreq}
           onChange={(event) => {
             setPayFreq(event.target.value);
-            cal();
+            cal(income, event.target.value);
           }}
           helperText="Please select pay frequency"
           variant="filled"
@@ -94,7 +90,7 @@ export default function IncomeCal() {
           value={year}
           onChange={(event) => {
             setYear(event.target.value);
-            cal();
+            cal(income, event.target.value);
           }}
           helperText="Please select your currency"
           variant="filled"
