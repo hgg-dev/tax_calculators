@@ -1,4 +1,6 @@
-// tell babel which presets to use for transpiling the code.
-{
-  "presets": ["@babel/preset-env", "@babel/preset-react"]
-}
+
+// its seems after instsall typescript adding webpack, remove js, no need babelrc
+// // tell babel which presets to use for transpiling the code.
+// {
+//   "presets": ["@babel/preset-env", "@babel/preset-react"]
+// }
