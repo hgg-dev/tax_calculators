@@ -13,8 +13,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IncomeCalculator = (incomeAmount: number, payFreq: string): number => {
-  let income = incomeAmount;
+const IncomeCalculator = (
+  incomeAmount: number | string,
+  payFreq: string
+): number => {
+  let income: number | string = incomeAmount;
 
   if ((payFreq = "Weekly")) {
     income * 52;
@@ -42,7 +45,7 @@ export default function IncomeCal() {
   const [tax, setTax] = React.useState(0);
   const [payFreq, setPayFreq] = React.useState("Annually");
 
-  const cal = () => {
+  const cal = (inc: string | number, pay: string) => {
     setTax(IncomeCalculator(income, payFreq));
   };
 
@@ -56,8 +59,13 @@ export default function IncomeCal() {
           variant="outlined"
           defaultValue={75000}
           onChange={(event) => {
-            setIncome(event.target.value);
-            cal();
+            // 1. trigger on key in
+            setTax(IncomeCalculator(event.target.value, payFreq));
+
+            // 2. trigger on after key
+            let val = event.target.value;
+            cal(val, payFreq);
+            //setIncome(event.target.value);
           }}
         />
         <TextField
