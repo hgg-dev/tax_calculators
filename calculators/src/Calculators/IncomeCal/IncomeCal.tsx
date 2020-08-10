@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, TextField, MenuItem } from "@material-ui/core";
 import NumberFormat from "react-number-format";
-import { years, payFrequency } from "../../Utilise/helpers";
+import { years, payFrequency } from "../../Utilise/CalenderHelpers";
 import { makeStyles } from "@material-ui/core/styles";
+import Switch from "@material-ui/core/Switch";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { Console } from "console";
+import { IncomeCalculator } from "./IncomeCalFormula";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,38 +18,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IncomeCalculator = (incomeAmount: number, payFreq: string): number => {
-  let income = incomeAmount;
-
-  if (payFreq == "Weekly") {
-    income * 52;
-  } else if (payFreq == "Fortnightly") {
-    income * 26;
-  }
-
-  if (income <= 18200) {
-    return 0;
-  } else if (income <= 37000) {
-    return (income - 18200) * 0.19;
-  } else if (income <= 90000) {
-    return (income - 37000) * 0.325 + 3572;
-  } else if (income <= 180000) {
-    return (income - 90000) * 0.37 + 20797;
-  } else {
-    return (income - 180000) * 0.45 + 54097;
-  }
-};
-
 export default function IncomeCal() {
   const classes = useStyles();
   const [year, setYear] = React.useState("2021");
-  const [income, setIncome] = React.useState(0);
+  const [income, setIncome] = React.useState(75000);
   const [tax, setTax] = React.useState(0);
   const [payFreq, setPayFreq] = React.useState("Annually");
+  const [switchControl, setswitchControl] = React.useState({
+    ESGcheck: false,
+    SLCheck: false,
+  });
 
   const cal = (inc: number, freq: string) => {
+    console.log(inc, freq);
     setTax(IncomeCalculator(inc, freq));
   };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setswitchControl({
+      ...switchControl,
+      [event.target.name]: event.target.checked,
+    });
+    console.log(switchControl);
+  };
+
+  useEffect(() => {
+    cal(income, "Annually");
+  });
 
   return (
     <>
@@ -55,7 +54,7 @@ export default function IncomeCal() {
           className={"form-fields"}
           label={"Income " + payFreq}
           variant="outlined"
-          defaultValue={75000}
+          defaultValue={income}
           onChange={(event) => {
             setIncome(parseInt(event.target.value));
             // trigger on next input key
@@ -101,6 +100,26 @@ export default function IncomeCal() {
             </MenuItem>
           ))}
         </TextField>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={switchControl.ESGcheck}
+              onChange={handleChange}
+              name="ESGcheck"
+            />
+          }
+          label="Employer Superannuation"
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={switchControl.SLCheck}
+              onChange={handleChange}
+              name="SLCheck"
+            />
+          }
+          label="Student Loans"
+        />
       </form>
       <div>
         <NumberFormat
