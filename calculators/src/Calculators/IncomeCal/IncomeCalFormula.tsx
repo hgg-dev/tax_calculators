@@ -1,4 +1,5 @@
 import { individualIncomeTaxRate } from "../../Utilise/TaxTableHelpers";
+import { payFreqConverter } from "../../Utilise/CalenderHelpers";
 
 export const IncomeCalculator = (
   incomeAmount: number,
@@ -6,20 +7,26 @@ export const IncomeCalculator = (
 ): any => {
   let income = incomeAmount;
 
-  if (payFreq == "Weekly") {
-    income * 52;
-  } else if (payFreq == "Fortnightly") {
-    income * 26;
+  const rate = payFreqConverter.find((r) => r.frq === payFreq);
+
+  if (rate) {
+    income = income * rate.rate;
   }
 
-  var i;
-  for (i = 0; i < individualIncomeTaxRate[2020].length; i++) {
-    var val = individualIncomeTaxRate[2020];
-    if (income < val[i].maxBracket) {
-      return (income - val[i].rateFrom) * val[i].rate + val[i].taxbase;
-    }
-  }
+  const rateYear = individualIncomeTaxRate[2020];
+  const rateTable = rateYear.find((r) => income < r.maxBracket);
+  return rateTable
+    ? (income - rateTable.rateFrom) * rateTable.rate + rateTable.taxbase
+    : 0;
 };
+
+// for loop
+// for (let i = 0; i < individualIncomeTaxRate[2020].length; i++) {
+//   var val = individualIncomeTaxRate[2020];
+//   if (income < val[i].maxBracket) {
+//     return (income - val[i].rateFrom) * val[i].rate + val[i].taxbase;
+//   }hin
+// }
 
 //   individualIncomeTaxRate[2020].forEach(function (val: any, i: any) {
 //     console.log("individualIncomeTaxRate");

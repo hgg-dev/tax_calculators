@@ -31,3 +31,18 @@ export const payFrequency = [
     label: "Annually",
   },
 ];
+
+export const payFreqConverter = [
+  {
+    frq: "Weekly",
+    rate: 52,
+  },
+  {
+    frq: "Fortnightly",
+    rate: 26,
+  },
+  {
+    value: "Annually",
+    rate: 1,
+  },
+];
