@@ -29,9 +29,9 @@ export default function IncomeCal() {
     SLCheck: false,
   });
 
-  const cal = (inc: number, freq: string) => {
+  const cal = (inc: number, freq: string, yr: string) => {
     console.log(inc, freq);
-    setTax(IncomeCalculator(inc, freq));
+    setTax(IncomeCalculator(inc, freq, yr));
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +43,7 @@ export default function IncomeCal() {
   };
 
   useEffect(() => {
-    cal(income, "Annually");
+    cal(income, "Annually", year);
   });
 
   return (
@@ -58,9 +58,9 @@ export default function IncomeCal() {
           onChange={(event) => {
             setIncome(parseInt(event.target.value));
             // trigger on next input key
-            cal(income, payFreq);
+            // cal(income, payFreq, year);
             // trigger on key in
-            cal(parseInt(event.target.value), payFreq);
+            cal(parseInt(event.target.value), payFreq, year);
           }}
         />
         <TextField
@@ -71,7 +71,7 @@ export default function IncomeCal() {
           value={payFreq}
           onChange={(event) => {
             setPayFreq(event.target.value);
-            cal(income, event.target.value);
+            cal(income, event.target.value, year);
           }}
           helperText="Please select pay frequency"
           variant="filled"
@@ -89,7 +89,7 @@ export default function IncomeCal() {
           value={year}
           onChange={(event) => {
             setYear(event.target.value);
-            cal(income, event.target.value);
+            cal(income, payFreq, event.target.value);
           }}
           helperText="Please select your currency"
           variant="filled"

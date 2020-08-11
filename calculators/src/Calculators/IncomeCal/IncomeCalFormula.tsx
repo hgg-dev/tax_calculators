@@ -1,9 +1,10 @@
-import { individualIncomeTaxRate } from "../../Utilise/TaxTableHelpers";
+import { individualIncomeTaxRate, year } from "../../Utilise/TaxTableHelpers";
 import { payFreqConverter } from "../../Utilise/CalenderHelpers";
 
 export const IncomeCalculator = (
   incomeAmount: number,
-  payFreq: string
+  payFreq: string,
+  year: 2021 | 2020 | 2019 | 2018 | 2017
 ): any => {
   let income = incomeAmount;
 
@@ -12,8 +13,7 @@ export const IncomeCalculator = (
   if (rate) {
     income = income * rate.rate;
   }
-
-  const rateYear = individualIncomeTaxRate[2020];
+  const rateYear = individualIncomeTaxRate[year];
   const rateTable = rateYear.find((r) => income < r.maxBracket);
   return rateTable
     ? (income - rateTable.rateFrom) * rateTable.rate + rateTable.taxbase
