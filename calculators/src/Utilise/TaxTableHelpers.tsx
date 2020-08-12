@@ -56,5 +56,5 @@ export const individualIncomeTaxRate: year = {
     { maxBracket: 999999, rate: 0.45, rateFrom: 180000, taxbase: 54097 },
   ],
 };
-};
+
 // https://www.ato.gov.au/Rates/Individual-income-tax-for-prior-years/
