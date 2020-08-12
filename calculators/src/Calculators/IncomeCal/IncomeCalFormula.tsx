@@ -1,22 +1,35 @@
-import { individualIncomeTaxRate, year } from "../../Utilise/TaxTableHelpers";
+import {
+  individualIncomeTaxRate,
+  yearType,
+  ESGRate,
+} from "../../Utilise/TaxTableHelpers";
 import { payFreqConverter } from "../../Utilise/CalenderHelpers";
 
 export const IncomeCalculator = (
   incomeAmount: number,
   payFreq: string,
-  year: 2021 | 2020 | 2019 | 2018 | 2017
+  year: yearType,
+  ESGcheck: boolean,
+  SLCheck: boolean
 ): any => {
-  let income = incomeAmount;
+  console.log("IncomeCalculator ran");
+  let grossIncome = incomeAmount;
 
+  // if (ESGcheck) {
+  //   let yr = 2020;
+  //   grossIncome = (grossIncome / (1 + ESGRate[year])) * 100;
+  // }
+
+  // Convert Pay Frequency to Annauly
   const rate = payFreqConverter.find((r) => r.frq === payFreq);
-
   if (rate) {
-    income = income * rate.rate;
+    grossIncome = grossIncome * rate.rate;
   }
+
   const rateYear = individualIncomeTaxRate[year];
-  const rateTable = rateYear.find((r) => income < r.maxBracket);
+  const rateTable = rateYear.find((r) => grossIncome < r.maxBracket);
   return rateTable
-    ? (income - rateTable.rateFrom) * rateTable.rate + rateTable.taxbase
+    ? (grossIncome - rateTable.rateFrom) * rateTable.rate + rateTable.taxbase
     : 0;
 };
 
